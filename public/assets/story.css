@@ -110,3 +110,21 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .easy-block-actions .easy-delete:hover,.easy-block-actions .easy-delete:focus-visible{background:#692a42}
 .story-import-label{display:inline-flex;width:max-content;align-items:center;margin-top:.75rem}
 .draft-status{color:#afe5ee;font:600 .7rem/1.4 ui-monospace,monospace;align-self:center}
+
+/* Larger, searchable carried-object library. */
+.carry-search-label{display:block;margin:.55rem 0;color:#dfe5ff;font-size:.88rem}.carry-search-label input{display:block;width:100%;margin-top:.35rem}.selected-carry{margin:.35rem 0 .6rem;color:var(--yellow);font-size:.84rem}.carry-picker{max-height:340px;overflow-y:auto;overscroll-behavior:contain;padding:.25rem;scrollbar-color:#7771cf #080e32}.carry-choice{min-height:88px;font-size:.78rem;padding:.4rem .25rem}.carry-choice[hidden]{display:none}.carry-choice-art{width:42px;height:42px}.carry-choice-art img{width:100%;height:100%;object-fit:contain}.carry-picker .pixel-prop{image-rendering:auto}@media(max-width:550px){.carry-picker{grid-template-columns:repeat(3,minmax(0,1fr))}.carry-choice{min-height:86px;font-size:.76rem}}
+/* Scene effects selected by the story creator. */
+.scene-effect-field{margin:1rem 0;padding:.9rem;border:2px solid var(--blue);background:#050b23}
+.scene-effect-field label{display:block;margin-bottom:.45rem;color:var(--yellow)}
+.scene-effect-field .muted{margin:.45rem 0 0}
+.motion-Sunshine .novel-atmosphere{background:radial-gradient(circle at 78% 17%,#fff3a5b8 0 4%,#ffe16f5c 8%,#ffbb422c 26%,transparent 48%);mix-blend-mode:screen;animation:sunGlow 8s ease-in-out infinite alternate}
+.motion-Sunshine .novel-atmosphere::before{background:repeating-conic-gradient(from 0deg at 78% 17%,#ffed9b30 0deg 7deg,transparent 9deg 30deg);mask-image:radial-gradient(circle at 78% 17%,transparent 0 5%,#000 8% 55%,transparent 75%);animation:sunRays 24s linear infinite}
+.motion-Thunderstorm .novel-atmosphere::before{background:repeating-linear-gradient(105deg,transparent 0 54px,#c3faff99 55px 57px,transparent 58px 96px);background-size:290px 260px;opacity:.6;animation:rainFall .7s linear infinite reverse}
+.motion-Thunderstorm .novel-atmosphere::after{background:#e7f8ff;opacity:0;animation:lightningFlash 9s steps(1,end) infinite}
+@keyframes sunGlow{to{opacity:.55;transform:scale(1.05)}}
+@keyframes sunRays{to{transform:rotate(360deg)}}
+@keyframes lightningFlash{0%,17%,19%,20%,22%,100%{opacity:0}18%,21%{opacity:.56}}
+@media(prefers-reduced-motion:reduce){.motion-Thunderstorm .novel-atmosphere::after{opacity:0}.motion-Sunshine .novel-atmosphere,.motion-Sunshine .novel-atmosphere::before{animation:none}}
+.scene-effect-actions{display:flex;gap:.65rem;align-items:center;flex-wrap:wrap}.scene-effect-actions select{flex:1 1 180px}.scene-effect-actions button{white-space:nowrap}
+.effect-preview-back{z-index:9999}.effect-preview-modal{width:min(760px,94vw);max-width:760px}.effect-preview-head{display:flex;justify-content:space-between;gap:1rem;align-items:start}.effect-preview-head h2{margin:.35rem 0 1rem}.effect-preview-stage{position:relative;height:clamp(250px,48vh,470px);overflow:hidden;isolation:isolate;background:#16263e}.effect-preview-scenery{position:absolute;inset:0;background:var(--scene-image) center/cover;image-rendering:pixelated}.effect-preview-stage .novel-atmosphere{position:absolute;inset:0;z-index:2;pointer-events:none}.effect-preview-character{position:absolute;right:4%;bottom:0;max-width:45%;height:78%;object-fit:contain;object-position:bottom;image-rendering:pixelated;z-index:1}.effect-preview-label{position:absolute;left:.8rem;bottom:.8rem;z-index:3;color:#fff;background:#000c;border:2px solid var(--yellow);padding:.35rem .6rem;font:700 .8rem monospace}
+@media(max-width:600px){.effect-preview-modal{padding:1rem}.effect-preview-stage{height:45vh}.effect-preview-character{max-width:55%}}

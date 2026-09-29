@@ -3,7 +3,7 @@ export const sceneLocations=['Forest','Village','Castle','River','Mountain','Cav
 export const sceneCharacters=['None','Traveller','Companion','Explorer','Automaton','Knight','Mage','Ranger','Rogue','Healer','Bard','Princess','Goblin','Troll','Dragon','Witch','Ghost','Pirate','Sailor','Detective','Scientist','Astronaut','Alien','Rebel','Clockwork Guard','Alchemist','Oracle','Blacksmith','Forest Sprite','Royal Courier','Mermaid','Vampire','Desert Nomad','Time Traveller','Robot Gardener','Moon Priestess','Inventor','Sea Captain','Archaeologist','Space Pilot','Librarian','Mushroom Folk','Ice Guardian','Circus Acrobat','Friendly Giant','Shadow Creature','Dragon Rider','Talking Fox','Fairy Queen','Clockmaker','Haunted Doll','Swamp Witch','Rebel Mechanic','Mountain Monk','Star Navigator','Beekeeper','Falconer','Coral Knight','Moss Golem','Skeleton Jester','Phoenix Tamer','Alien Botanist','Deep Sea Diver','Mountain Yeti','Masked Dancer','Talking Black Cat','Airship Captain','Moon Rabbit','Lighthouse Keeper','River Spirit','Toymaker','Samurai','Cyber Hacker','Young Adventurer','Elder Storyteller'];
 sceneLocations.push("Glass Labyrinth","Whispering Quarry","Ember Marsh","Crystal Bazaar","Forgotten Aqueduct","Floating Archive","Iron Orchard","Moonflower Meadow","Thunder Plateau","Starlit Caravan","Clockwork Cathedral","Sunken Amphitheatre","Ashen Battlefield","Lantern Festival","Mirror Desert","Frostbound Citadel","Giant's Stair","Hollow Volcano","Coral Observatory","Cloud Farm","Underground Railway","Paper Palace","Phoenix Aerie","Twilight Fen","Silver Mine","Windmill Valley","Abandoned Planetarium","Sapphire Grotto","Festival Square","Shadow Library");
 sceneCharacters.push("Moonberry Baker","Storm Shepherd","Wandering Puppeteer","Dragon Librarian","Lantern Guard","Crystal Miner","Coral Oracle","Cloud Fisher","Marsh Herbalist","Sky Courier","Star Child","Ashen Knight","Mirror Merchant","Mushroom Ranger","Moon Fox","Desert Astronomer","Clockwork Owl","Glacier Smith","Forest Guardian","Tea Witch","Pearl Diver","Ghost Navigator","Ember Bard","Silk Weaver","Night Watcher","Sun Priest","Wind Keeper","River Pirate","Paper Dragon","Clockwork Cartographer");
-export const sceneProps=['None','Lantern','Key','Door','Chest','Book','Sword','Crown','Map','Fire','Portal','Radio'];
+export const sceneProps=["None","Lantern","Key","Door","Chest","Book","Sword","Crown","Map","Fire","Portal","Radio","Shield","Potion","Compass","Scroll","Staff","Bow","Axe","Hammer","Pickaxe","Rope","Backpack","Telescope","Hourglass","Crystal","Orb","Amulet","Ring","Mask","Helmet","Banner","Flower","Mushroom","Moonberry Basket","Picnic Blanket","Teapot","Umbrella","Fishing Rod","Violin","Camera","Pocket Watch","Gear","Wrench","Star Chart","Space Helmet","Laser Pistol","Hologram","Robot Pet","Feather","Seashell","Treasure Coin"];
 export const sceneTimes=['Night','Dawn','Day','Dusk'];
 export const sceneMoods=['Mysterious','Hopeful','Dangerous','Peaceful'];
 export function suggestVisual(scene){
@@ -11,31 +11,10 @@ export function suggestVisual(scene){
  const first=(groups,fallback)=>groups.find(([re])=>re.test(t))?.[1]||fallback;
  return {location:sceneLocations.find(name=>t.includes(name.toLowerCase()))||first([[/moon base|lunar base/,'Moon Base'],[/arcade|game cabinet/,'Arcade'],[/underwater|submerged|mermaid/,'Underwater Palace'],[/volcano|lava/,'Volcano'],[/graveyard|cemetery|tombstones/,'Graveyard'],[/swamp|bog|marsh/,'Swamp'],[/harbor|harbour|dock|port/,'Harbor'],[/snow|blizzard|frost/,'Snow Village'],[/ruins|ancient stones/,'Enchanted Ruins'],[/witch.?s? hut|cottage in the woods/,'Witch Hut'],[/library|bookshelves|archive/,'Library'],[/tower|spire/,'Wizard Tower'],[/prison|dungeon cell/,'Dungeon Cell'],[/market|bazaar/,'Market'],[/garden|flowerbed/,'Secret Garden'],[/temple|shrine/,'Desert Temple'],[/laboratory|lab equipment/,'Laboratory'],[/workshop|invention/,'Workshop'],[/factory|assembly line/,'Factory'],[/storm coast|seaside|beach/,'Storm Coast'],[/space|ship|station|lunar|planet|starship/,'Space'],[/city|street|alley|neon|arcade/,'City'],[/castle|throne|palace|hall/,'Castle'],[/river|lake|boat|water|shore/,'River'],[/mountain|cliff|peak|snow/,'Mountain'],[/cave|crypt|tunnel|underground|dungeon/,'Cavern'],[/desert|dune|sand/,'Desert'],[/village|town|home|cottage/,'Village'],[/valley|field|meadow/,'Valley'],[/forest|woods|tree|grove/,'Forest']],scene.background||'Forest'),prop:first([[/lantern|torch|lamp/,'Lantern'],[/door|gate/,'Door'],[/key|lock/,'Key'],[/chest|treasure/,'Chest'],[/book|letter|scroll|journal/,'Book'],[/sword|blade|weapon/,'Sword'],[/crown|king|queen/,'Crown'],[/map|compass/,'Map'],[/fire|flame|burn/,'Fire'],[/portal|magic|spell/,'Portal'],[/radio|signal|transmitter/,'Radio']],'None'),actor:sceneCharacters.find(name=>t.includes(name.toLowerCase()))||first([[/astronaut|space suit/,'Astronaut'],[/alien|extraterrestrial/,'Alien'],[/scientist|researcher/,'Scientist'],[/detective|investigator/,'Detective'],[/pirate|buccaneer/,'Pirate'],[/sailor|captain/,'Sailor'],[/clockwork guard/,'Clockwork Guard'],[/robot|machine|android/,'Automaton'],[/knight|soldier|paladin/,'Knight'],[/witch/,'Witch'],[/wizard|mage|sorcerer/,'Mage'],[/healer|medic/,'Healer'],[/bard|musician/,'Bard'],[/ranger|archer|scout/,'Ranger'],[/rogue|thief/,'Rogue'],[/princess|royal girl/,'Princess'],[/goblin/,'Goblin'],[/troll/,'Troll'],[/dragon/,'Dragon'],[/ghost|spirit/,'Ghost'],[/rebel/,'Rebel'],[/wolf|animal|companion/,'Companion'],[/explorer/,'Explorer']],'Traveller'),time:first([[/sunrise|morning|dawn/,'Dawn'],[/sunset|evening|dusk/,'Dusk'],[/midday|afternoon|sunlight/,'Day']],'Night'),mood:first([[/danger|battle|fight|attack|storm/,'Dangerous'],[/joy|hope|friend|save|celebrat/,'Hopeful'],[/quiet|safe|rest|peace/,'Peaceful']],'Mysterious')};
 }
-const colours={Lantern:'#ffe66d',Key:'#ffe66d',Door:'#c078ff',Chest:'#ed9a4d',Book:'#51e3e3',Sword:'#d9eeff',Crown:'#ffe66d',Map:'#e9d387',Fire:'#ff6d35',Portal:'#be72ff',Radio:'#51e3e3'};
-const shapes={
- Lantern:'<path d="M12 4h8v4h-8zM8 8h16v18H8zM12 12h8v10h-8zM6 26h20v3H6z"/>',
- Key:'<path d="M9 5h10v3H9zM6 8h3v10H6zM9 18h8v3H9zM15 15h3v12h-3zM18 22h7v3h-7zM22 25h4v3h-4z"/>',
- Door:'<path d="M6 3h20v27H6zM10 7h12v23H10zM18 18h3v3h-3z"/>',
- Chest:'<path d="M4 10h24v16H4zM7 7h18v4H7zM6 16h20v3H6zM14 17h4v6h-4z"/>',
- Book:'<path d="M3 6h12l2 3 2-3h10v21H19l-2 2-2-2H3zM15 9h3v18h-3zM6 12h6v2H6zM21 12h5v2h-5z"/>',
- Sword:'<path d="M22 2h7v7l-13 13-5-5zM9 17l6 6-2 2-6-6zM4 24l4-4 4 4-4 4z"/>',
- Crown:'<path d="M3 9l6 6 6-9 5 9 9-6-3 18H6zM7 23h18v4H7z"/>',
- Map:'<path d="M3 6l8-2 10 2 8-2v22l-8 2-10-2-8 2zM11 4v22M21 6v22M15 12h3v3h-3z"/>',
- Fire:'<path d="M16 2l4 9 4-3 4 11-4 8H8l-4-8 6-10 2 5zM13 18l3-6 4 6-2 8h-6z"/>',
- Portal:'<path d="M10 2h12v3H10zM6 5h4v5H6zM22 5h4v5h-4zM3 10h4v15H3zM25 10h4v15h-4zM7 25h5v4H7zM20 25h5v4h-5zM12 27h8v3h-8zM13 10h6v11h-6z"/>',
- Radio:'<path d="M5 10h22v17H5zM8 7l15-5 1 3-15 5zM9 14h12v3H9zM9 20h3v3H9zM16 20h3v3h-3zM22 20h3v3h-3z"/>'
-};
-const highlights={
- Lantern:'<path fill="#ffffff" d="M13 11h6v3h-6z"/><path fill="#ffdf28" d="M11 15h10v6H11z"/><path fill="#ff7a24" d="M14 18h4v5h-4z"/><path fill="#49dfff" d="M9 9h2v15H9z"/>',
- Key:'<path fill="#fff8ac" d="M10 7h8v3h-8zM9 11h3v5H9z"/><path fill="#f8a528" d="M16 19h2v8h-2zM19 23h5v2h-5z"/>',
- Book:'<path fill="#261372" d="M6 9h8v15H6zM19 9h8v15h-8z"/><path fill="#ffffff" d="M7 10h6v2H7zM20 10h6v2h-6z"/><path fill="#f9e746" d="M8 15h5v2H8zM21 15h5v2h-5z"/>',
- Sword:'<path fill="#ffffff" d="M23 4h4v4L15 20l-2-2z"/><path fill="#42dfff" d="M22 8h3L14 19l-2-2z"/><path fill="#ffe447" d="M7 20l6 6-2 2-6-6z"/>',
- Crown:'<path fill="#fff6a7" d="M6 12l4 4 5-7 4 7 7-4-2 10H8z"/><path fill="#f321a8" d="M11 18h3v3h-3zM19 18h3v3h-3z"/><path fill="#ffffff" d="M13 23h6v2h-6z"/>',
- Map:'<path fill="#fff4ad" d="M5 8l5-2v17l-5 2zM13 8l6 2v16l-6-2zM23 9l4-2v17l-4 2z"/><path fill="#fa318e" d="M15 13h3v3h-3zM17 16h2v2h-2z"/><path fill="#48dffe" d="M6 19h3v2H6z"/>',
- Radio:'<path fill="#191866" d="M7 12h18v13H7z"/><path fill="#48e8f5" d="M9 14h12v4H9z"/><path fill="#fff3ad" d="M10 21h3v3h-3zM16 21h3v3h-3z"/><path fill="#fa30a3" d="M22 20h3v4h-3z"/>',
- Door:'<path fill="#191866" d="M10 7h12v21H10z"/><path fill="#fff0a1" d="M18 18h3v3h-3z"/>',
- Chest:'<path fill="#382065" d="M6 17h20v8H6z"/><path fill="#ffe447" d="M8 9h16v3H8zM14 17h4v6h-4z"/>',
- Fire:'<path fill="#ffe447" d="M13 12h7v12h-7z"/><path fill="#ffffff" d="M15 19h3v5h-3z"/>',
- Portal:'<path fill="#191866" d="M10 9h12v17H10z"/><path fill="#48dfff" d="M13 11h6v12h-6z"/>',
-};
-export function propMarkup(name){if(!shapes[name])return '';return `<svg class="pixel-prop" viewBox="0 0 32 32" role="img" aria-label="${name}" shape-rendering="crispEdges"><g fill="#03030d" stroke="#03030d" stroke-width="3" stroke-linejoin="miter">${shapes[name]}</g><g fill="${colours[name]}" stroke="#03030d" stroke-width=".8" stroke-linejoin="miter">${shapes[name]}</g>${highlights[name]||''}</svg>`}
+
+const propNames=new Set(sceneProps.slice(1));
+export function propMarkup(name){
+ if(!propNames.has(name))return "";
+ const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+ return `<img class="pixel-prop" src="/assets/item-${slug}.webp" alt="${name}">`;
+}
