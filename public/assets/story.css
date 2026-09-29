@@ -121,6 +121,8 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .motion-Sunshine .novel-atmosphere::before{background:repeating-conic-gradient(from 0deg at 78% 17%,#ffed9b30 0deg 7deg,transparent 9deg 30deg);mask-image:radial-gradient(circle at 78% 17%,transparent 0 5%,#000 8% 55%,transparent 75%);animation:sunRays 24s linear infinite}
 .motion-Thunderstorm .novel-atmosphere::before{background:repeating-linear-gradient(105deg,transparent 0 54px,#c3faff99 55px 57px,transparent 58px 96px);background-size:290px 260px;opacity:.6;animation:rainFall .7s linear infinite reverse}
 .motion-Thunderstorm .novel-atmosphere::after{background:#e7f8ff;opacity:0;animation:lightningFlash 9s steps(1,end) infinite}
+.motion-None .novel-atmosphere::after,.motion-None .novel-particles{display:none}
+.motion-None .novel-scenery,.motion-None .novel-character,.motion-None .novel-support,.motion-None .visual-stage-prop,.motion-None .carry-game{animation:none!important}
 @keyframes sunGlow{to{opacity:.55;transform:scale(1.05)}}
 @keyframes sunRays{to{transform:rotate(360deg)}}
 @keyframes lightningFlash{0%,17%,19%,20%,22%,100%{opacity:0}18%,21%{opacity:.56}}
