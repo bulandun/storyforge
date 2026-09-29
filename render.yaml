@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: storyforge
+    runtime: node
+    plan: 0.5c-512mb
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 24.19.0
+      - key: STORYFORGE_DB_PATH
+        value: /opt/render/project/src/storage/storyforge.sqlite
+    disk:
+      name: storyforge-data
+      mountPath: /opt/render/project/src/storage
+      sizeGB: 1

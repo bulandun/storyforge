@@ -5,3 +5,5 @@ dist/
 .wrangler/
 .sites-runtime/
 .env*
+.data/
+storage/
