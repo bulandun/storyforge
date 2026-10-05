@@ -145,3 +145,13 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .carry-game{right:7%;top:55%;bottom:auto}
 .novel-screen:has(.visual-stage-prop) .carry-game{left:27%;right:auto}
 @media(max-width:700px){.novel-character{top:9%;height:70%;max-width:64%}.carry-game{top:52%;width:min(14vw,82px)}}
+
+
+/* Keep character transform controls close to the character preview. */
+.asset-settings-fields .character-options{display:grid;grid-template-columns:minmax(180px,300px) 1fr;column-gap:1rem;align-items:end}
+.asset-settings-fields .character-options>.field-grid,
+.asset-settings-fields .character-options>.btn,
+.asset-settings-fields .character-options>.field:nth-last-child(2){grid-column:1 / -1}
+.asset-settings-fields .character-options>.field:last-of-type{grid-column:1;max-width:300px;margin-bottom:0}
+.asset-settings-fields .character-checks{grid-column:1;justify-content:flex-start;margin:.35rem 0 0;gap:.45rem .8rem}
+@media(max-width:700px){.asset-settings-fields .character-options{grid-template-columns:1fr}.asset-settings-fields .character-options>.field:last-of-type,.asset-settings-fields .character-checks{grid-column:1;max-width:none}}
