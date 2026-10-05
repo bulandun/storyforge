@@ -145,3 +145,12 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .carry-game{right:7%;top:55%;bottom:auto}
 .novel-screen:has(.visual-stage-prop) .carry-game{left:27%;right:auto}
 @media(max-width:700px){.novel-character{top:9%;height:70%;max-width:64%}.carry-game{top:52%;width:min(14vw,82px)}}
+
+
+/* Story-builder feedback */
+.story-health{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:14px 0 18px;padding:12px 14px;border:2px solid #f761d5;background:#140d1c;box-shadow:4px 4px 0 #000}
+.story-health strong{font-size:.88rem;text-transform:uppercase;letter-spacing:.06em;color:#fff15a}
+.story-health span{font-size:.86rem;color:#ddd}
+.story-health.ready{border-color:#56e36f;background:#0b1a10}
+.story-health.ready strong{color:#56e36f}
+.easy-choice-fields>.muted{margin-top:-.35rem;margin-bottom:1rem;max-width:62ch}
