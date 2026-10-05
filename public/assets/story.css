@@ -175,3 +175,13 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .easy-shell{min-height:100vh}
 .easy-story-map{scroll-margin-top:90px}
 .easy-controls .btn.primary{font-weight:800}
+
+
+/* Gameplay: make choices feel consequential */
+.play-progress{position:absolute;top:58px;left:24px;z-index:8;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em}
+.play-progress span,.play-progress strong{padding:5px 8px;background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.28)}
+.play-progress strong{color:#fff15a}
+.novel-choice{transition:transform .12s ease,opacity .12s ease,filter .12s ease}
+.novel-choice:hover{transform:translateX(6px)}
+.novel-choice:disabled{pointer-events:none;opacity:.45}
+.novel-choice.chosen{opacity:1;filter:brightness(1.25);transform:translateX(10px)}
