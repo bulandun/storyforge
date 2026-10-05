@@ -185,3 +185,13 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .novel-choice:hover{transform:translateX(6px)}
 .novel-choice:disabled{pointer-events:none;opacity:.45}
 .novel-choice.chosen{opacity:1;filter:brightness(1.25);transform:translateX(10px)}
+
+
+/* Story map remains the primary workspace on large and small stories */
+.easy-story-map{position:relative;overflow:auto;max-height:min(68vh,760px);scrollbar-gutter:stable both-edges;padding-bottom:32px}
+.easy-story-map:focus-within{outline:2px solid rgba(255,241,90,.35);outline-offset:4px}
+@media (max-width:760px){
+  .easy-map-head{align-items:flex-start}
+  .easy-controls{gap:6px}
+  .easy-story-map{max-height:none;overflow-x:auto}
+}
