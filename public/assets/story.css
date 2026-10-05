@@ -195,3 +195,11 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
   .easy-controls{gap:6px}
   .easy-story-map{max-height:none;overflow-x:auto}
 }
+
+
+/* Actionable story health */
+.story-health{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.story-health>div{display:grid;gap:3px}
+.story-health small{opacity:.76}
+.story-health.ready small{opacity:.9}
+@media (max-width:620px){.story-health{align-items:flex-start;flex-direction:column}}
