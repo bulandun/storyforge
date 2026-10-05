@@ -9,6 +9,26 @@ const $=s=>document.querySelector(s),app=$('#app');
 const genres=['Fantasy','Sci-Fi','Mystery','Horror','Adventure','Historical','Comedy','Create Your Own'];
 const portraits={Traveller:'retro-traveller.png',Companion:'retro-wolf.png',Explorer:'retro-explorer.png',Automaton:'retro-automaton.png',Knight:'char-knight.webp',Mage:'char-mage.webp',Ranger:'char-ranger.webp',Rogue:'char-rogue.webp',Healer:'char-healer.webp',Bard:'char-bard.webp',Princess:'char-princess.webp',Goblin:'char-goblin.webp',Troll:'char-troll.webp',Dragon:'char-dragon.webp',Witch:'char-witch.webp',Ghost:'char-ghost.webp',Pirate:'char-pirate.webp',Sailor:'char-sailor.webp',Detective:'char-detective.webp',Scientist:'char-scientist.webp',Astronaut:'char-astronaut.webp',Alien:'char-alien.webp',Rebel:'char-rebel.webp','Clockwork Guard':'char-clockwork-guard.webp','Alchemist':'char-alchemist.webp','Oracle':'char-oracle.webp','Blacksmith':'char-blacksmith.webp','Forest Sprite':'char-forest-sprite.webp','Royal Courier':'char-royal-courier.webp','Mermaid':'char-mermaid.webp','Vampire':'char-vampire.webp','Desert Nomad':'char-desert-nomad.webp','Time Traveller':'char-time-traveller.webp','Robot Gardener':'char-robot-gardener.webp','Moon Priestess':'char-moon-priestess.webp','Inventor':'char-inventor.webp','Sea Captain':'char-sea-captain.webp','Archaeologist':'char-archaeologist.webp','Space Pilot':'char-space-pilot.webp','Librarian':'char-librarian.webp','Mushroom Folk':'char-mushroom-folk.webp','Ice Guardian':'char-ice-guardian.webp','Circus Acrobat':'char-circus-acrobat.webp','Friendly Giant':'char-friendly-giant.webp','Shadow Creature':'char-shadow-creature.webp','Dragon Rider':'char-dragon-rider.webp','Talking Fox':'char-talking-fox.webp','Fairy Queen':'char-fairy-queen.webp','Clockmaker':'char-clockmaker.webp','Haunted Doll':'char-haunted-doll.webp','Swamp Witch':'char-swamp-witch.webp','Rebel Mechanic':'char-rebel-mechanic.webp','Mountain Monk':'char-mountain-monk.webp','Star Navigator':'char-star-navigator.webp','Beekeeper':'char-beekeeper.webp','Falconer':'char-falconer.webp','Coral Knight':'char-coral-knight.webp','Moss Golem':'char-moss-golem.webp','Skeleton Jester':'char-skeleton-jester.webp','Phoenix Tamer':'char-phoenix-tamer.webp','Alien Botanist':'char-alien-botanist.webp','Deep Sea Diver':'char-deep-sea-diver.webp','Mountain Yeti':'char-mountain-yeti.webp','Masked Dancer':'char-masked-dancer.webp','Talking Black Cat':'char-talking-black-cat.webp','Airship Captain':'char-airship-captain.webp','Moon Rabbit':'char-moon-rabbit.webp','Lighthouse Keeper':'char-lighthouse-keeper.webp','River Spirit':'char-river-spirit.webp','Toymaker':'char-toymaker.webp','Samurai':'char-samurai.webp','Cyber Hacker':'char-cyber-hacker.webp','Young Adventurer':'char-young-adventurer.webp','Elder Storyteller':'char-elder-storyteller.webp'};
 Object.assign(portraits,{
+  "Aurora Mechanic":"char-aurora-mechanic.svg",
+  "Bog Knight":"char-bog-knight.svg",
+  "Comet Witch":"char-comet-witch.svg",
+  "Dune Scout":"char-dune-scout.svg",
+  "Echo Monk":"char-echo-monk.svg",
+  "Frost Alchemist":"char-frost-alchemist.svg",
+  "Gear Goblin":"char-gear-goblin.svg",
+  "Harbor Mystic":"char-harbor-mystic.svg",
+  "Ivory Ranger":"char-ivory-ranger.svg",
+  "Jungle Pilot":"char-jungle-pilot.svg",
+  "Kite Mage":"char-kite-mage.svg",
+  "Lava Hermit":"char-lava-hermit.svg",
+  "Meteor Farmer":"char-meteor-farmer.svg",
+  "Neon Samurai":"char-neon-samurai.svg",
+  "Orchid Thief":"char-orchid-thief.svg",
+  "Plasma Knight":"char-plasma-knight.svg",
+  "Quarry Giant":"char-quarry-giant.svg",
+  "Rune Sailor":"char-rune-sailor.svg",
+  "Solar Fox":"char-solar-fox.svg",
+  "Tunnel Wizard":"char-tunnel-wizard.svg",
   "Moonberry Baker":"char-moonberry-baker.webp",
   "Storm Shepherd":"char-storm-shepherd.webp",
   "Wandering Puppeteer":"char-wandering-puppeteer.webp",
@@ -40,13 +60,33 @@ Object.assign(portraits,{
   "Paper Dragon":"char-paper-dragon.webp",
   "Clockwork Cartographer":"char-clockwork-cartographer.webp",
 });
-const carriedObjects=["None","Lantern","Key","Book","Sword","Crown","Map","Radio","Shield","Potion","Compass","Scroll","Staff","Bow","Axe","Hammer","Pickaxe","Rope","Backpack","Telescope","Hourglass","Crystal","Orb","Amulet","Ring","Mask","Helmet","Banner","Flower","Mushroom","Moonberry Basket","Picnic Blanket","Teapot","Umbrella","Fishing Rod","Violin","Camera","Pocket Watch","Gear","Wrench","Star Chart","Space Helmet","Laser Pistol","Hologram","Robot Pet","Feather","Seashell","Treasure Coin"];
+const carriedObjects=["None","Acorn Charm","Ancient Coin","Bell","Binoculars","Blue Gem","Boots","Bottle","Broken Crown","Candle","Chalk","Clockwork Key","Copper Compass","Crystal Feather","Dice","Dragon Egg","Emerald","Empty Bottle","Flute","Fossil","Glass Key","Golden Apple","Grappling Hook","Green Potion","Ink Bottle","Iron Key","Jade Idol","Magic Bean","Magnifying Glass","Mechanical Bird","Meteor Shard","Moon Coin","Music Box","Old Photograph","Pearl","Pocket Mirror","Red Potion","Rope Ladder","Ruby","Silver Bell","Silver Key","Sketchbook","Small Drum","Snow Globe","Spyglass","Stone Tablet","Sun Medallion","Torch","Toy Rocket","Wooden Horse","Yellow Potion",,"Lantern","Key","Book","Sword","Crown","Map","Radio","Shield","Potion","Compass","Scroll","Staff","Bow","Axe","Hammer","Pickaxe","Rope","Backpack","Telescope","Hourglass","Crystal","Orb","Amulet","Ring","Mask","Helmet","Banner","Flower","Mushroom","Moonberry Basket","Picnic Blanket","Teapot","Umbrella","Fishing Rod","Violin","Camera","Pocket Watch","Gear","Wrench","Star Chart","Space Helmet","Laser Pistol","Hologram","Robot Pet","Feather","Seashell","Treasure Coin"];
 const musicTracks=['Dungeon','Enchanted','Mystery','Cosmic','None'];
 const sceneEffects=['None','Sunshine','Rain','Thunderstorm','Snow','Clouds','Mist','Wind','Stars','Embers','Flicker'];
 const sceneEffectPicker=(s,easy=false)=>`<div class="field scene-effect-field"><label for="${easy?'easy-':''}scene-effect-${escape(s.id)}">Scene effect</label><div class="scene-effect-actions"><select id="${easy?'easy-':''}scene-effect-${escape(s.id)}" ${easy?`data-easy-visual="motion" data-easy-id="${escape(s.id)}"`:'data-scene="motion"'}>${sceneEffects.map(effect=>`<option value="${effect}" ${motionFor(s)===effect?'selected':''}>${effect}</option>`).join('')}</select><button type="button" class="btn sm" data-preview-effect="${escape(s.id)}">Preview effect</button></div><p class="muted">Appears when someone plays this scene. Choose None for a still scene.</p></div>`;
 function previewSceneEffect(id){const s=scene(id);if(!s)return;const selectedEffect=motionFor(s),picker=document.querySelector(`[data-preview-effect="${CSS.escape(id)}"]`)?.closest('.scene-effect-field')?.querySelector('select');if(picker)picker.value=selectedEffect;const backdrop=background(s),actorKey=s.visual?.actor||s.portrait||project.portrait;const modal=document.createElement('div');modal.className='modal-back effect-preview-back';modal.innerHTML=`<div class="modal effect-preview-modal" role="dialog" aria-modal="true" aria-label="Preview ${escape(selectedEffect)} effect"><div class="effect-preview-head"><div><div class="eyebrow">Scene effect preview</div><h2>${escape(s.title)}</h2></div><button type="button" class="btn sm" data-close-effect>Close</button></div><div class="effect-preview-stage motion-${escape(selectedEffect)}" style="--scene-image:url('${escape(backdrop)}')"><div class="effect-preview-scenery"></div><div class="novel-atmosphere" aria-hidden="true"></div>${actorKey==='None'?'':`<img class="effect-preview-character" src="${escape(portrait(s))}" alt="">`}<span class="effect-preview-label">${escape(selectedEffect)}</span></div></div>`;const close=()=>{modal.remove();document.removeEventListener('keydown',onKey)};const onKey=e=>{if(e.key==='Escape')close()};modal.onclick=e=>{if(e.target===modal||e.target.closest('[data-close-effect]'))close()};document.addEventListener('keydown',onKey);document.body.append(modal);modal.querySelector('[data-close-effect]')?.focus();playSceneSound(s.sound||'None')}
 const backdrops={Forest:'retro-forest.png',Village:'retro-village.webp',Castle:'retro-castle.webp',River:'retro-river.webp',Mountain:'retro-mountain.webp',Cavern:'retro-cavern.png',Desert:'retro-desert.png',Space:'retro-space.webp',City:'retro-city.webp',Valley:'retro-valley.png','Enchanted Ruins':'bg-enchanted-ruins.webp','Witch Hut':'bg-witch-hut.webp',Graveyard:'bg-graveyard.webp',Harbor:'bg-harbor.webp','Storm Coast':'bg-storm-coast.webp','Snow Village':'bg-snow-village.webp',Swamp:'bg-swamp.webp',Library:'bg-library.webp','Wizard Tower':'bg-wizard-tower.webp','Dungeon Cell':'bg-dungeon-cell.webp',Market:'bg-market.webp','Secret Garden':'bg-secret-garden.webp',Volcano:'bg-volcano.webp','Desert Temple':'bg-desert-temple.webp','Underwater Palace':'bg-underwater-palace.webp',Workshop:'bg-workshop.webp',Laboratory:'bg-laboratory.webp',Arcade:'bg-arcade.webp',Factory:'bg-factory.webp','Moon Base':'bg-moon-base.webp','Moonlit Orchard':'bg-moonlit-orchard.webp','Observatory':'bg-observatory.webp','Flooded Station':'bg-flooded-station.webp','Crystal Lake':'bg-crystal-lake.webp','Cliff Monastery':'bg-cliff-monastery.webp','Banquet Hall':'bg-banquet-hall.webp','Sunken Ship':'bg-sunken-ship.webp','Sky Islands':'bg-sky-islands.webp','Volcanic Forge':'bg-volcanic-forge.webp','Snowy Lighthouse':'bg-snowy-lighthouse.webp','Frontier Town':'bg-frontier-town.webp','Overgrown Theatre':'bg-overgrown-theatre.webp','Ancient Tomb':'bg-ancient-tomb.webp','Neon Alley':'bg-neon-alley.webp','Desert Oasis':'bg-desert-oasis.webp','Greenhouse':'bg-greenhouse.webp','Misty Bog':'bg-misty-bog.webp','Dragon Nest':'bg-dragon-nest.webp','Mushroom Village':'bg-mushroom-village.webp','Night Train':'bg-night-train.webp','Manor Attic':'bg-manor-attic.webp','Apothecary':'bg-apothecary.webp','Glacier Cave':'bg-glacier-cave.webp','Alien Jungle':'bg-alien-jungle.webp','Clock Tower':'bg-clock-tower.webp','Submarine':'bg-submarine.webp','Redwood Camp':'bg-redwood-camp.webp','Abandoned Carnival':'bg-abandoned-carnival.webp','Canal City':'bg-canal-city.webp','Stone Circle':'bg-stone-circle.webp'};
 Object.assign(backdrops,{
+  "Aurora Harbor":"bg-aurora-harbor.svg",
+  "Bone Desert":"bg-bone-desert.svg",
+  "Comet Station":"bg-comet-station.svg",
+  "Dreaming Forest":"bg-dreaming-forest.svg",
+  "Emerald Ruins":"bg-emerald-ruins.svg",
+  "Frozen Observatory":"bg-frozen-observatory.svg",
+  "Golden Swamp":"bg-golden-swamp.svg",
+  "Hidden Monastery":"bg-hidden-monastery.svg",
+  "Ivory Canyon":"bg-ivory-canyon.svg",
+  "Jellyfish Reef":"bg-jellyfish-reef.svg",
+  "Kingfisher Marsh":"bg-kingfisher-marsh.svg",
+  "Lava Library":"bg-lava-library.svg",
+  "Meteor Crater":"bg-meteor-crater.svg",
+  "Neon Temple":"bg-neon-temple.svg",
+  "Orchid Cavern":"bg-orchid-cavern.svg",
+  "Prism Castle":"bg-prism-castle.svg",
+  "Quartz Village":"bg-quartz-village.svg",
+  "Rust Shipyard":"bg-rust-shipyard.svg",
+  "Solar Garden":"bg-solar-garden.svg",
+  "Tunnel Kingdom":"bg-tunnel-kingdom.svg",
   "Glass Labyrinth":"bg-glass-labyrinth.webp",
   "Whispering Quarry":"bg-whispering-quarry.webp",
   "Ember Marsh":"bg-ember-marsh.webp",
