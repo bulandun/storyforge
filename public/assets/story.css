@@ -169,3 +169,9 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 .choice-recap ol{list-style:none;padding:0;margin:.55rem 0;display:grid;gap:6px}
 .choice-recap li{display:flex;align-items:center;gap:10px;padding:8px 10px;background:rgba(0,0,0,.3);border-left:3px solid #f761d5}
 .choice-recap li span{font-size:.7rem;opacity:.65}.choice-recap li strong{font-size:.9rem}
+
+
+/* Keep the map as the centre of the creator flow */
+.easy-shell{min-height:100vh}
+.easy-story-map{scroll-margin-top:90px}
+.easy-controls .btn.primary{font-weight:800}
