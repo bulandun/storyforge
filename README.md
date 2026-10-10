@@ -1,26 +1,23 @@
-# Storyforge on Render
+# StoryForge on Render + Turso
 
-This app needs a **Node web service**. Its `/api/stories` routes save games on the server, so it cannot be deployed as a static site. The repository's `render.yaml` defines a paid web service with a 1 GB persistent disk for those saves.
+Deploy as a Node web service on Render Free. Stories are stored remotely in Turso and survive Render restarts, spin-downs and deployments.
 
-## New service
+## Render configuration
 
-In Render, choose **New → Blueprint** and connect this repository. Review the paid compute and disk before creating the service. The Blueprint builds with `npm ci && npm run build`, starts with `npm start`, and writes story data to the disk under `/opt/render/project/src/storage`.
+- Build: `npm ci && npm run build`
+- Start: `npm start`
+- Node: `24.19.0`
+- Root directory: repository root
+- Environment: `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` (server-only secrets)
 
-## Existing web service
+Create a Turso database and token, set both variables in Render, then deploy. The story table and index are created automatically on first database access. Production fails with a storage error if credentials are missing instead of silently saving to temporary storage. No Render disk is required. Render Free still spins down when idle.
 
-If you already created a Node web service, update its settings and deploy the latest commit:
+## Existing stories
 
-| Setting | Value |
-| --- | --- |
-| Root directory | Repository root (blank in Render) |
-| Runtime | Node |
-| Build command | `npm ci && npm run build` |
-| Start command | `npm start` |
-| Node version | `24.19.0` (from `.node-version`, or `NODE_VERSION`) |
-| Health check path | `/` |
+Existing SQLite and Cloudflare D1 stories are not automatically transferred. Export valuable stories before restarting or redeploying the old service. Preserve story IDs and owner keys when importing database rows so existing ownership remains intact.
 
-For saved stories to survive deploys and restarts, attach a persistent disk at `/opt/render/project/src/storage` and set `STORYFORGE_DB_PATH=/opt/render/project/src/storage/storyforge.sqlite`. Render only offers persistent disks on paid web services. Without a disk, the app can run on a free web service, but server-saved stories will be lost when the instance restarts or redeploys.
+Render uses a per-browser guest key, not accounts. Users must retain that browser key to reopen their remote drafts. Clearing browser data or changing devices does not recover ownership automatically. Shared links should be tested separately from draft storage.
 
-Render's `PORT` is read by `npm start`; the Next.js server listens on `0.0.0.0`. Do not use the former Wrangler `start` command. If the current Render service was created as a static site, create a Node web service instead.
+## Local development
 
-The Render database starts empty. Existing stories stored in the Cloudflare D1 database are not automatically transferred. Render uses a per-browser guest key for saved stories; the ChatGPT Sites sign-in flow is unavailable on Render.
+Run `npm ci` and `npm run dev`. Without Turso credentials, development uses local SQLite at `.data/storyforge.sqlite` (or `STORYFORGE_DB_PATH`). Set both Turso variables to test remote storage. Never commit tokens or expose them with a `NEXT_PUBLIC_` prefix.
