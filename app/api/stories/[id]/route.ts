@@ -9,8 +9,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   if (!owner) return NextResponse.json({ error: 'Missing story key' }, { status: 401 });
   try {
     const { id } = await params;
-    const row = storyDb().prepare('SELECT content FROM stories WHERE id = ? AND owner_key = ?').get(id, owner) as {content: string} | undefined;
-    return row ? NextResponse.json({ story: JSON.parse(row.content) }) : NextResponse.json({ error: 'Story not found' }, { status: 404 });
+    const db = await storyDb();
+    const row = (await db.execute({ sql: 'SELECT content FROM stories WHERE id = ? AND owner_key = ?', args: [id, owner] })).rows[0];
+    return row ? NextResponse.json({ story: JSON.parse(String(row.content)) }) : NextResponse.json({ error: 'Story not found' }, { status: 404 });
   } catch (error) { console.error('Story load failed', error); return NextResponse.json({ error: 'Could not open story' }, { status: 503 }); }
 }
 
@@ -19,8 +20,9 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
   if (!owner) return NextResponse.json({ error: 'Missing story key' }, { status: 401 });
   try {
     const { id } = await params;
-    const result = storyDb().prepare('DELETE FROM stories WHERE id = ? AND owner_key = ?').run(id, owner);
-    if (!result.changes) return NextResponse.json({ error: 'Story not found' }, { status: 404 });
+    const db = await storyDb();
+    const result = await db.execute({ sql: 'DELETE FROM stories WHERE id = ? AND owner_key = ?', args: [id, owner] });
+    if (!result.rowsAffected) return NextResponse.json({ error: 'Story not found' }, { status: 404 });
     return NextResponse.json({ deleted: true });
   } catch (error) { console.error('Story deletion failed', error); return NextResponse.json({ error: 'Could not delete story' }, { status: 503 }); }
 }

@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
   const { owner: key, signedIn } = storyOwner(request);
   if (!key) return NextResponse.json({ error: 'Missing story key' }, { status: 401 });
   try {
-    const rows = storyDb().prepare('SELECT id, title, updated_at AS updatedAt FROM stories WHERE owner_key = ? ORDER BY updated_at DESC LIMIT 50').all(key);
+    const db = await storyDb();
+    const { rows } = await db.execute({ sql: 'SELECT id, title, updated_at AS updatedAt FROM stories WHERE owner_key = ? ORDER BY updated_at DESC LIMIT 50', args: [key] });
     return NextResponse.json({ stories: rows, signedIn, accountAvailable: false, limit: MAX_STORIES });
   } catch (error) { console.error('Story list failed', error); return NextResponse.json({ error: 'Story storage unavailable' }, { status: 503 }); }
 }
@@ -23,13 +24,14 @@ export async function POST(request: NextRequest) {
     const body = JSON.parse(raw), story = body.story;
     if (!story || typeof story.title !== 'string' || !Array.isArray(story.scenes) || story.scenes.length > 300 || !story.scenes.some((scene: {id: string}) => scene.id === story.opening)) return NextResponse.json({ error: 'Invalid story' }, { status: 400 });
     const id = typeof body.id === 'string' && /^[a-zA-Z0-9-]{12,64}$/.test(body.id) ? body.id : crypto.randomUUID();
-    const existing = storyDb().prepare('SELECT owner_key FROM stories WHERE id = ?').get(id) as {owner_key: string} | undefined;
+    const db = await storyDb();
+    const existing = (await db.execute({ sql: 'SELECT owner_key FROM stories WHERE id = ?', args: [id] })).rows[0];
     if (existing && existing.owner_key !== key) return NextResponse.json({ error: 'Story unavailable' }, { status: 403 });
     if (!existing) {
-      const count = storyDb().prepare('SELECT COUNT(*) AS total FROM stories WHERE owner_key = ?').get(key) as {total: number};
-      if (count.total >= MAX_STORIES) return NextResponse.json({ error: 'You can save up to 50 stories. Delete one to save another.' }, { status: 403 });
+      const count = (await db.execute({ sql: 'SELECT COUNT(*) AS total FROM stories WHERE owner_key = ?', args: [key] })).rows[0];
+      if (Number(count.total) >= MAX_STORIES) return NextResponse.json({ error: 'You can save up to 50 stories. Delete one to save another.' }, { status: 403 });
     }
-    storyDb().prepare('INSERT INTO stories (id, owner_key, title, content, updated_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET title=excluded.title, content=excluded.content, updated_at=excluded.updated_at').run(id, key, story.title.slice(0,120), JSON.stringify(story), Date.now());
+    await db.execute({ sql: 'INSERT INTO stories (id, owner_key, title, content, updated_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET title=excluded.title, content=excluded.content, updated_at=excluded.updated_at WHERE stories.owner_key = excluded.owner_key', args: [id, key, story.title.slice(0,120), JSON.stringify(story), Date.now()] });
     return NextResponse.json({ id });
   } catch (error) { console.error('Story save failed', error); return NextResponse.json({ error: 'Could not save story' }, { status: 503 }); }
 }
