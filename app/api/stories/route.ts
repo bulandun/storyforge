@@ -6,19 +6,19 @@ export const runtime = 'nodejs';
 const MAX_STORIES = 50;
 
 export async function GET(request: NextRequest) {
-  const { owner: key, signedIn } = storyOwner(request);
-  if (!key) return NextResponse.json({ error: 'Missing story key' }, { status: 401 });
   try {
+    const { owner: key, signedIn } = await storyOwner(request);
+    if (!key) return NextResponse.json({ error: 'Sign in with a verified email to access your games', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
     const db = await storyDb();
-    const { rows } = await db.execute({ sql: 'SELECT id, title, updated_at AS updatedAt FROM stories WHERE owner_key = ? ORDER BY updated_at DESC LIMIT 50', args: [key] });
-    return NextResponse.json({ stories: rows, signedIn, accountAvailable: false, limit: MAX_STORIES });
+    const { rows } = await db.execute({ sql: 'SELECT s.id, s.title, s.updated_at AS updatedAt, p.token AS shareToken FROM stories s LEFT JOIN published_stories p ON p.story_id = s.id WHERE s.owner_key = ? ORDER BY s.updated_at DESC LIMIT 50', args: [key] });
+    return NextResponse.json({ stories: rows, signedIn, accountAvailable: true, limit: MAX_STORIES });
   } catch (error) { console.error('Story list failed', error); return NextResponse.json({ error: 'Story storage unavailable' }, { status: 503 }); }
 }
 
 export async function POST(request: NextRequest) {
-  const { owner: key } = storyOwner(request);
-  if (!key) return NextResponse.json({ error: 'Missing story key' }, { status: 401 });
   try {
+    const { owner: key } = await storyOwner(request);
+    if (!key) return NextResponse.json({ error: 'Sign in with a verified email to save your game', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
     const raw = await request.text();
     if (raw.length > 1500000) return NextResponse.json({ error: 'Story is too large' }, { status: 413 });
     const body = JSON.parse(raw), story = body.story;

@@ -16,7 +16,25 @@ Create a Turso database and token, set both variables in Render, then deploy. Th
 
 Existing SQLite and Cloudflare D1 stories are not automatically transferred. Export valuable stories before restarting or redeploying the old service. Preserve story IDs and owner keys when importing database rows so existing ownership remains intact.
 
-Render uses a per-browser guest key, not accounts. Users must retain that browser key to reopen their remote drafts. Clearing browser data or changing devices does not recover ownership automatically. Shared links should be tested separately from draft storage.
+## Email accounts
+
+Create a Clerk application. Enable Email as the required identifier, email verification at sign-up, and email verification code for sign-in. Disable username, phone and social login options for an email-only experience. Configure unrestricted sign-up so any verified email can register.
+
+Add `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from the same Clerk instance to Render. Set `STORYFORGE_APP_URL=https://storyforge-phlc.onrender.com` (update this if the public domain changes). The publishable key is public; the secret key must remain server-only. Render must rebuild after changing the public key.
+
+Use a Clerk production instance for a public release and complete its production-domain/DNS setup. Development keys are for testing. If a custom domain is required by Clerk production setup, configure the same domain in Render, Clerk and `STORYFORGE_APP_URL` before launch.
+
+Creating and playing remain available without an account. Saving and publishing require a server-verified Clerk session and a verified email. Draft ownership uses the stable Clerk user ID and works across devices. Local editing recovery remains on the current device. Existing guest saves remain in the database but are not automatically reassigned to new accounts: users can save their current browser draft after logging in.
+
+## Sharing
+
+Publish saves the latest draft, then stores a separate playable snapshot under a random short link. Recipients can play without logging in. Editing a draft does not change the published version until Publish is clicked again. My Games lists private/shared status, copies links, stops sharing and deletes games. Unpublishing invalidates the server link; republishing generates a new link. Deleting a game also removes its published snapshot.
+
+Old self-contained `#play=` links continue to work, but cannot be revoked because the story data is in the link itself. Newly published games use server-backed links.
+
+## Validation
+
+Run `npm run test:storage` for mocked Clerk authentication and local libSQL route checks, and `npm run build` for the production build. Real email delivery, Clerk production setup and remote Turso connectivity must also be verified in the configured deployment.
 
 ## Local development
 
