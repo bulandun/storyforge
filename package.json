@@ -11,10 +11,13 @@
     "build": "next build",
     "start": "node scripts/render-start.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "test:storage": "node scripts/test-storage.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
+    "@clerk/backend": "^3.23.2",
+    "@clerk/nextjs": "^7.9.14",
     "@hookform/resolvers": "^5.7.1",
     "@libsql/client": "^0.18.0",
     "@shadcn/react": "^0.3.0",

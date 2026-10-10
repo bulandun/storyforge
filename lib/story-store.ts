@@ -35,6 +35,12 @@ async function initialize(): Promise<Client> {
         updated_at INTEGER NOT NULL
       )`,
       'CREATE INDEX IF NOT EXISTS stories_owner_updated ON stories (owner_key, updated_at DESC)',
+      `CREATE TABLE IF NOT EXISTS published_stories (
+        story_id TEXT PRIMARY KEY,
+        token TEXT NOT NULL UNIQUE,
+        content TEXT NOT NULL,
+        published_at INTEGER NOT NULL
+      )`,
     ], 'write');
     return db;
   } catch (error) {
