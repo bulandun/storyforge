@@ -39,3 +39,9 @@ Run `npm run test:storage` for mocked Clerk authentication and local libSQL rout
 ## Local development
 
 Run `npm ci` and `npm run dev`. Without Turso credentials, development uses local SQLite at `.data/storyforge.sqlite` (or `STORYFORGE_DB_PATH`). Set both Turso variables to test remote storage. Never commit tokens or expose them with a `NEXT_PUBLIC_` prefix.
+
+## Readiness health check
+
+`GET /api/ready` returns uncached `200 {"ready":true}` only after storage initialization and queries against both story tables succeed. Missing production Turso credentials, connection/schema failures, and probes taking longer than three seconds return `503 {"ready":false}`. Responses contain no credentials or database details. Local development checks its configured local SQLite database.
+
+The Render Blueprint uses `/api/ready` as `healthCheckPath`. For an existing manually configured service, set **Settings → Health Check Path** to `/api/ready`; merging this file does not establish that the dashboard setting changed. This check verifies database access, not Clerk email delivery or every save/publish permission. Repeated failed database checks may cause Render to restart the service; restarting cannot resolve an external Turso outage.
