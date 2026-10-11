@@ -1,3 +1,4 @@
+import { validateStory } from '@/public/assets/story-validation.js';
 import { randomBytes } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { storyOwner } from '@/lib/story-owner';
@@ -11,14 +12,21 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!owner) return NextResponse.json({ error: 'Sign in with a verified email to share your game', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
     const { id } = await params;
     const db = await storyDb();
+    const draft = (await db.execute({ sql: 'SELECT content FROM stories WHERE id = ? AND owner_key = ?', args: [id, owner] })).rows[0];
+    if (!draft) return NextResponse.json({ error: 'Story not found' }, { status: 404 });
+    let story;
+    try { story = JSON.parse(String(draft.content)); } catch { return NextResponse.json({ error: 'Invalid saved game', code: 'INVALID_STORY' }, { status: 400 }); }
+    const validationError = validateStory(story);
+    if (validationError) return NextResponse.json({ error: validationError, code: 'INVALID_STORY' }, { status: 400 });
     // Insert only from an owned draft. Republishing updates the snapshot at the same link.
     const token = randomBytes(24).toString('hex');
-    await db.execute({
+    const result = await db.execute({
       sql: `INSERT INTO published_stories (story_id, token, content, published_at)
-        SELECT id, ?, content, ? FROM stories WHERE id = ? AND owner_key = ?
+        SELECT id, ?, content, ? FROM stories WHERE id = ? AND owner_key = ? AND content = ?
         ON CONFLICT(story_id) DO UPDATE SET content = excluded.content, published_at = excluded.published_at`,
-      args: [token, Date.now(), id, owner],
+      args: [token, Date.now(), id, owner, String(draft.content)],
     });
+    if (!result.rowsAffected) return NextResponse.json({ error: 'Your draft changed. Please publish again.' }, { status: 409 });
     const row = (await db.execute({ sql: 'SELECT p.token FROM published_stories p JOIN stories s ON s.id = p.story_id WHERE s.id = ? AND s.owner_key = ?', args: [id, owner] })).rows[0];
     if (!row) return NextResponse.json({ error: 'Story not found' }, { status: 404 });
     return NextResponse.json({ token: row.token });
