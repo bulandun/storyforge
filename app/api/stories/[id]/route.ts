@@ -1,3 +1,4 @@
+import { validStory } from '@/public/assets/story-validation.js';
 import { NextRequest, NextResponse } from 'next/server';
 import { storyOwner } from '@/lib/story-owner';
 import { storyDb } from '@/lib/story-store';
@@ -11,7 +12,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const db = await storyDb();
     const row = (await db.execute({ sql: 'SELECT content FROM stories WHERE id = ? AND owner_key = ?', args: [id, owner] })).rows[0];
-    return row ? NextResponse.json({ story: JSON.parse(String(row.content)) }) : NextResponse.json({ error: 'Story not found' }, { status: 404 });
+    if (!row) return NextResponse.json({ error: 'Story not found' }, { status: 404 });
+    const story = JSON.parse(String(row.content));
+    if (!validStory(story)) return NextResponse.json({ error: 'Invalid saved game', code: 'INVALID_STORY' }, { status: 422 });
+    return NextResponse.json({ story });
   } catch (error) { console.error('Story load failed', error); return NextResponse.json({ error: 'Could not open story' }, { status: 503 }); }
 }
 
