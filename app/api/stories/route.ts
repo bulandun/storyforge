@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storyOwner } from '@/lib/story-owner';
+import { storyOwner, accountError } from '@/lib/story-owner';
 import { storyDb } from '@/lib/story-store';
 
 export const runtime = 'nodejs';
@@ -8,7 +8,7 @@ const MAX_STORIES = 50;
 export async function GET(request: NextRequest) {
   try {
     const { owner: key, signedIn } = await storyOwner(request);
-    if (!key) return NextResponse.json({ error: 'Sign in with a verified email to access your games', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
+    if (!key) return NextResponse.json(accountError(signedIn), { status: signedIn ? 403 : 401 });
     const db = await storyDb();
     const { rows } = await db.execute({ sql: 'SELECT s.id, s.title, s.updated_at AS updatedAt, p.token AS shareToken FROM stories s LEFT JOIN published_stories p ON p.story_id = s.id WHERE s.owner_key = ? ORDER BY s.updated_at DESC LIMIT 50', args: [key] });
     return NextResponse.json({ stories: rows, signedIn, accountAvailable: true, limit: MAX_STORIES });
@@ -17,8 +17,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { owner: key } = await storyOwner(request);
-    if (!key) return NextResponse.json({ error: 'Sign in with a verified email to save your game', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
+    const { owner: key, signedIn } = await storyOwner(request);
+    if (!key) return NextResponse.json(accountError(signedIn), { status: signedIn ? 403 : 401 });
     const raw = await request.text();
     if (raw.length > 1500000) return NextResponse.json({ error: 'Story is too large' }, { status: 413 });
     const body = JSON.parse(raw), story = body.story;
