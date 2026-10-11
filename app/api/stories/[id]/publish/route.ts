@@ -1,14 +1,14 @@
 import { randomBytes } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
-import { storyOwner } from '@/lib/story-owner';
+import { storyOwner, accountError } from '@/lib/story-owner';
 import { storyDb } from '@/lib/story-store';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { owner } = await storyOwner(request);
-    if (!owner) return NextResponse.json({ error: 'Sign in with a verified email to share your game', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
+    const { owner, signedIn } = await storyOwner(request);
+    if (!owner) return NextResponse.json(accountError(signedIn), { status: signedIn ? 403 : 401 });
     const { id } = await params;
     const db = await storyDb();
     // Insert only from an owned draft. Republishing updates the snapshot at the same link.
@@ -27,8 +27,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { owner } = await storyOwner(request);
-    if (!owner) return NextResponse.json({ error: 'Sign in to stop sharing', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
+    const { owner, signedIn } = await storyOwner(request);
+    if (!owner) return NextResponse.json(accountError(signedIn), { status: signedIn ? 403 : 401 });
     const { id } = await params;
     const db = await storyDb();
     const result = await db.execute({ sql: 'DELETE FROM published_stories WHERE story_id IN (SELECT id FROM stories WHERE id = ? AND owner_key = ?)', args: [id, owner] });

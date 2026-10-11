@@ -234,7 +234,7 @@ function bind(){app.querySelectorAll('[data-preview-effect]').forEach(el=>el.onc
 async function ensureAccount(pendingAction){
   const auth=window.storyforgeAuth;
   if(!auth?.ready){toast(auth?'Account is loading. Please try again in a moment.':'Login is being set up. Your draft is still on this device.');return false}
-  if(auth.userId)return true;
+  if(auth.userId){if(auth.emailVerified===false){showEmailVerification();return false}return true}
   save();
   sessionStorage.setItem('storyforge-after-login',pendingAction);
   auth.signIn();
@@ -258,9 +258,19 @@ async function refreshCloudDrafts(){
     list.querySelectorAll('[data-delete-cloud-story]').forEach(el=>el.onclick=()=>deleteCloudStory(el.dataset.deleteCloudStory,el.dataset.storyTitle));
     list.querySelectorAll('[data-copy-share]').forEach(el=>el.onclick=()=>navigator.clipboard.writeText(location.origin+'/?game='+el.dataset.copyShare).then(()=>toast('Play link copied')).catch(()=>toast('Could not copy the link. Open the game and share it again.')));
     list.querySelectorAll('[data-unpublish]').forEach(el=>el.onclick=async()=>{if(!confirm('Stop sharing this game? Its play link will stop working.'))return;try{await cloudRequest('/api/stories/'+encodeURIComponent(el.dataset.unpublish)+'/publish',{method:'DELETE'});await refreshCloudDrafts();toast('Game is private again')}catch(error){toast(error.message)}});
-  }catch(error){if(list.isConnected){list.textContent=error.message||'Saved games are temporarily unavailable.'}}
+  }catch(error){if(list.isConnected){list.textContent=error.message||'Saved games are temporarily unavailable.';if(error.code==='EMAIL_VERIFICATION_REQUIRED'){const button=document.createElement('button');button.className='btn sm';button.textContent='Verify your email';button.onclick=()=>window.storyforgeAuth?.verifyEmail();list.append(button)}}}
 }
 async function deleteCloudStory(id,title){if(!confirm(`Delete “${title}”? This removes your saved game and cannot be undone.`))return;try{await cloudRequest('/api/stories/'+encodeURIComponent(id),{method:'DELETE'});if(cloudStoryId===id){cloudStoryId=null;localStorage.removeItem('storyforge-current-cloud-id')}await refreshCloudDrafts();toast('Saved game deleted')}catch(error){toast(error.message||'Could not delete game')}}
+function showEmailVerification(){
+  if(document.getElementById('email-verification-dialog'))return;
+  const modal=document.createElement('div');modal.className='modal-back';modal.id='email-verification-dialog';
+  modal.innerHTML='<div class="modal" role="dialog" aria-modal="true" aria-labelledby="email-verification-title"><h2 id="email-verification-title">Verify your email</h2><p>Verify an email address in your account settings before saving or sharing games. Then return here and try again. Your current draft stays on this device.</p><div class="inline-actions"><button class="btn primary" id="verify-email-action">Verify your email</button><button class="btn ghost" id="close-verification">Close</button></div></div>';
+  document.body.append(modal);
+  modal.querySelector('#verify-email-action').onclick=()=>{modal.remove();window.storyforgeAuth?.verifyEmail()};
+  modal.querySelector('#close-verification').onclick=()=>modal.remove();
+  modal.onclick=event=>{if(event.target===modal)modal.remove()};
+  modal.querySelector('#verify-email-action').focus();
+}
 function showAccountRequired(){ensureAccount('save-story')}
 async function openCloudStory(id){try{const {story}=await cloudRequest('/api/stories/'+encodeURIComponent(id));if(!valid(story))throw Error('Invalid story');history.replaceState(null,'',location.pathname);project=story;project.easyMode=true;cloudStoryId=id;localStorage.setItem('storyforge-current-cloud-id',id);selected=project.opening;featured=false;published=false;view='edit';save();render();toast('Story opened')}catch(error){toast(error.message||'Could not open the story')}}
 function updateCloudControls(){
@@ -293,7 +303,7 @@ async function runCloudOperation(kind){
     const {token}=await cloudRequest('/api/stories/'+encodeURIComponent(id)+'/publish',{method:'POST'},context);
     if(!current())return null;
     return {id,token,snapshot};
-  }catch(error){if(error.code==='ACCOUNT_REQUIRED')showAccountRequired();else toast(error.message||'Could not save story. Try again.');return null}
+  }catch(error){if(error.code==='EMAIL_VERIFICATION_REQUIRED')showEmailVerification();else if(error.code==='ACCOUNT_REQUIRED')showAccountRequired();else toast(error.message||'Could not save story. Try again.');return null}
   finally{cloudBusy=false;updateCloudControls()}
 }
 async function saveCloudStory(){return Boolean(await runCloudOperation('save-story'))}

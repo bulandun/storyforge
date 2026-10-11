@@ -15,6 +15,12 @@ export async function storyOwner(request: NextRequest) {
   const auth = state.toAuth();
   if (!auth?.userId) return anonymous;
   const user = await clerk.users.getUser(auth.userId);
-  if (!user.emailAddresses.some(email => email.verification?.status === 'verified')) return anonymous;
+  if (!user.emailAddresses.some(email => email.verification?.status === 'verified')) return { owner: null, signedIn: true };
   return { owner: 'user:' + user.id, signedIn: true };
+}
+
+export function accountError(signedIn: boolean) {
+  return signedIn
+    ? { error: 'Verify your email before saving or sharing games.', code: 'EMAIL_VERIFICATION_REQUIRED' }
+    : { error: 'Sign in with a verified email to access your games', code: 'ACCOUNT_REQUIRED' };
 }
