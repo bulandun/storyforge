@@ -1,3 +1,4 @@
+import { validateStory } from '@/public/assets/story-validation.js';
 import { NextRequest, NextResponse } from 'next/server';
 import { storyOwner } from '@/lib/story-owner';
 import { storyDb } from '@/lib/story-store';
@@ -21,8 +22,11 @@ export async function POST(request: NextRequest) {
     if (!key) return NextResponse.json({ error: 'Sign in with a verified email to save your game', code: 'ACCOUNT_REQUIRED' }, { status: 401 });
     const raw = await request.text();
     if (raw.length > 1500000) return NextResponse.json({ error: 'Story is too large' }, { status: 413 });
-    const body = JSON.parse(raw), story = body.story;
-    if (!story || typeof story.title !== 'string' || !Array.isArray(story.scenes) || story.scenes.length > 300 || !story.scenes.some((scene: {id: string}) => scene.id === story.opening)) return NextResponse.json({ error: 'Invalid story' }, { status: 400 });
+    let body;
+    try { body = JSON.parse(raw); } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }); }
+    const story = body?.story;
+    const validationError = validateStory(story);
+    if (validationError) return NextResponse.json({ error: validationError, code: 'INVALID_STORY' }, { status: 400 });
     const id = typeof body.id === 'string' && /^[a-zA-Z0-9-]{12,64}$/.test(body.id) ? body.id : crypto.randomUUID();
     const db = await storyDb();
     const existing = (await db.execute({ sql: 'SELECT owner_key FROM stories WHERE id = ?', args: [id] })).rows[0];
