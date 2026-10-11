@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import vm from 'node:vm';
+import { createSafeStorage } from '../public/assets/browser-storage.js';
+let warnings=0;
+const denied=createSafeStorage(()=>{throw Error('SecurityError')},()=>warnings++);
+assert.equal(denied.getItem('draft'),null);
+assert.equal(denied.setItem('draft','latest'),false);
+assert.equal(denied.getItem('draft'),'latest');
+assert.equal(denied.removeItem('draft'),false);assert.equal(denied.getItem('draft'),null);assert.equal(warnings,1);
+const persisted=new Map([['draft','old']]);
+const full=createSafeStorage(()=>({getItem:key=>persisted.get(key)??null,setItem(){throw Error('QuotaExceededError')},removeItem(){throw Error('SecurityError')}}));
+assert.equal(full.getItem('draft'),'old');assert.equal(full.setItem('draft','new'),false);assert.equal(full.getItem('draft'),'new');assert.equal(persisted.get('draft'),'old');
+full.removeItem('draft');assert.equal(full.getItem('draft'),null);
+const healthy=createSafeStorage(()=>({getItem:key=>persisted.get(key)??null,setItem:(key,value)=>persisted.set(key,value),removeItem:key=>persisted.delete(key)}));
+assert.equal(healthy.setItem('draft','saved'),true);assert.equal(healthy.failed,false);
+// Execute draft save/load from the real app with blocked storage.
+const source=readFileSync('public/assets/story.js','utf8');
+const draftCode=source.slice(source.indexOf('function loadDraft(){'),source.indexOf('const scene=id=>'));
+const storage=createSafeStorage(()=>{throw Error('Blocked')});
+const context=vm.createContext({safeLocal:storage,$:()=>null,blank:()=>({title:'Empty',scenes:[]})});
+vm.runInContext(`let project={title:'Latest draft',opening:'start',scenes:[{id:'start',choices:[]}]},draftRevision=0,savedDraft=null;${draftCode}save();project=loadDraft();`,context);
+assert.equal(vm.runInContext('project.title',context),'Latest draft');
+assert.doesNotMatch(source,/(?<!window\.)\b(?:localStorage|sessionStorage)\.(?:getItem|setItem|removeItem)/);
+// A successful cloud save must remain successful when ID persistence fails.
+const cloudCode=source.slice(source.indexOf('function updateCloudControls(){'),source.indexOf('async function shrinkImage'));
+const cloud=vm.createContext({crypto:{randomUUID:()=> 'new-game-id'},safeLocal:storage,window:{storyforgeAuth:{userId:'a'}},app:{querySelectorAll:()=>[]},$:()=>null,toast(){},showAccountRequired(){},ensureAccount:async()=>true,cloudRequest:async()=>({id:'new-game-id'})});
+vm.runInContext(`let project={title:'Game'},draftRevision=0,cloudStoryId=null,cloudBusy=false,savedDraft=null,accountEpoch=0;const pendingDraftIds=new WeakMap();${cloudCode}`,cloud);
+assert.equal(await vm.runInContext('saveCloudStory()',cloud),true);assert.equal(vm.runInContext('cloudStoryId',cloud),'new-game-id');
+console.log('PASS: blocked storage, full storage, stale-value prevention, in-tab drafts and cloud-save success');
