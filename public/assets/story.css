@@ -157,3 +157,5 @@ body:has(.novel-screen){overflow:hidden}.novel-screen{width:100vw;height:100dvh;
 @media(max-width:700px){.asset-settings-fields .character-options{grid-template-columns:1fr}.asset-settings-fields .character-options>.field:last-of-type,.asset-settings-fields .character-checks{grid-column:1;max-width:none}}
 
 .story-account-bar{display:flex;justify-content:flex-end;align-items:center;gap:12px;padding:8px 20px;background:#161b2e;color:#fff;min-height:50px;font-size:14px}.story-account-email{max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.story-account-bar .btn{margin:0}.cloud-draft-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}@media(max-width:600px){.story-account-email{display:none}.story-account-bar{padding:8px 12px}}
+
+.storage-recovery-warning{padding:12px 20px;background:#fff4cc;color:#392c00;border-bottom:2px solid #dfb94a;font-family:system-ui,sans-serif;font-size:14px;line-height:1.5}
