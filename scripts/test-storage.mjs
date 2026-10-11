@@ -38,9 +38,13 @@ try {
     body: body ? JSON.stringify(body) : undefined,
   });
   const game = { title: 'Test game', opening: 'start', scenes: [{ id: 'start', text: 'Hello', choices: [] }] };
-  for (const token of [null, 'invalid', 'unverified']) {
+  for (const token of [null, 'invalid']) {
     assert.equal((await collection.POST(request('POST', { story: game }, token))).status, 401);
     assert.equal((await collection.GET(request('GET', null, token))).status, 401);
+  }
+  for (const response of [await collection.POST(request('POST', { story: game }, 'unverified')), await collection.GET(request('GET', null, 'unverified'))]) {
+    assert.equal(response.status, 403);
+    assert.equal((await response.json()).code, 'EMAIL_VERIFICATION_REQUIRED');
   }
   let response = await collection.POST(request('POST', { story: game }));
   assert.equal(response.status, 200);
@@ -51,6 +55,10 @@ try {
   assert.equal((await collection.POST(request('POST', { id, story: game }, 'user_b'))).status, 403);
   assert.equal((await item.DELETE(request('DELETE', null, 'user_b'), params)).status, 404);
   assert.equal((await publish.POST(request('POST', null, null), params)).status, 401);
+  for (const response of [await item.GET(request('GET', null, 'unverified'), params), await item.DELETE(request('DELETE', null, 'unverified'), params), await publish.POST(request('POST', null, 'unverified'), params), await publish.DELETE(request('DELETE', null, 'unverified'), params)]) {
+    assert.equal(response.status, 403);
+    assert.equal((await response.json()).code, 'EMAIL_VERIFICATION_REQUIRED');
+  }
   assert.equal((await publish.POST(request('POST', null, 'user_b'), params)).status, 404);
   response = await collection.GET(request('GET'));
   assert.equal((await response.json()).stories[0].shareToken, null);
