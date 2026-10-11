@@ -6,7 +6,7 @@ const functions=source.slice(source.indexOf('function updateCloudControls(){'),s
 function setup(){
   const calls=[], deferred=[];
   const status={textContent:''};
-  const context=vm.createContext({crypto:{randomUUID:()=> 'stable-new-id'},localStorage:{setItem(){}},window:{storyforgeAuth:{userId:'a'}},app:{querySelectorAll:()=>[]},$:()=>status,toast(){},showAccountRequired(){},ensureAccount:async()=>true,
+  const context=vm.createContext({crypto:{randomUUID:()=> 'stable-new-id'},safeLocal:{setItem(){}},window:{storyforgeAuth:{userId:'a'}},app:{querySelectorAll:()=>[]},$:()=>status,toast(){},showAccountRequired(){},ensureAccount:async()=>true,
     cloudRequest:(path,options,account)=>{calls.push({path,options,account});return new Promise((resolve,reject)=>deferred.push({resolve,reject}))}});
   vm.runInContext(`let project={title:'Original'},draftRevision=0,cloudStoryId=null,cloudBusy=false,savedDraft=null,accountEpoch=0;const pendingDraftIds=new WeakMap();${functions}`,context);
   return {context,calls,deferred,status,run:(code)=>vm.runInContext(code,context)};
